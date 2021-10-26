@@ -1,0 +1,15 @@
+.idea
+
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+bin
+vendor
+coverage.out
+
+.linter.config.toml.env

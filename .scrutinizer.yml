@@ -1,0 +1,31 @@
+checks:
+  go: true
+build:
+  nodes:
+    analysis:
+      project_setup:
+        override:
+          - 'true'
+      environment:
+        go:
+          version: go1.16
+      tests:
+        override:
+          - go-scrutinizer-run
+          - govet-run
+          - golint-run
+    tests:
+      dependencies:
+        override:
+          - go mod download
+          - go install github.com/golang/mock/mockgen@v1.6.0
+      environment:
+        go:
+          version: go1.16
+      tests:
+        override:
+          -
+            command: make test
+            coverage:
+              file: 'coverage.out'
+              format: 'go-cc'

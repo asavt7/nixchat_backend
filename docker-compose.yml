@@ -1,0 +1,87 @@
+version: "3.9"
+services:
+  backend-app:
+    image: nixchat_backend:latest
+    build:
+      target: app
+      dockerfile: Dockerfile
+      context: .
+    env_file:
+      - ${ENV_FILE}
+    environment:
+      PORT: "8080"
+    ports:
+      - "8080:8080"
+    networks:
+      - backend
+    depends_on:
+      - redis
+      - db
+    restart: always
+    healthcheck:
+      test: [ "CMD", "/healthcheck", "--url" ,"http://localhost:8080/health" ]
+      timeout: 3s
+      interval: 5s
+      retries: 10
+  redis:
+    image: "redis:alpine"
+    container_name: ${REDIS_HOST}
+    restart: unless-stopped
+    ports:
+      - ${REDIS_PORT}:6379
+    networks:
+      - backend
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 1s
+      timeout: 3s
+      retries: 30
+  db:
+    container_name: pg_container
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_USER: ${PG_USERNAME}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+      POSTGRES_DB: ${PG_NAME}
+    ports:
+      - ${PG_PORT}:5432
+    networks:
+      - backend
+      - dbnet
+    healthcheck:
+      test: [ "CMD", "pg_isready"]
+      timeout: 45s
+      interval: 10s
+      retries: 10
+  migrate:
+    image: migrate/migrate
+    restart: on-failure
+    env_file:
+      - ${ENV_FILE}
+    networks:
+      - dbnet
+    volumes:
+      - ./migrations:/migrations
+    command: [ "-path", "/migrations", "-database",  "postgres://${PG_USERNAME}:${PG_PASSWORD}@${PG_HOST}:${PG_PORT}/${PG_NAME}?sslmode=${PG_SSLMODE}", "up" ]
+    links:
+      - db
+    depends_on:
+      - db
+  pgadmin:
+    container_name: pgadmin4_container
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    networks:
+      - dbnet
+    depends_on:
+      - db
+networks:
+  backend:
+  dbnet:

@@ -1,0 +1,26 @@
+name: Build go app
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.16
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Get dependencies
+        run: |
+          go mod download
+          go install github.com/golang/mock/mockgen@v1.6.0
+
+      - name: Test
+        run: make test
