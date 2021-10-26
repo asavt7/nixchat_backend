@@ -1,5 +1,5 @@
 ![Github CI/CD](https://img.shields.io/github/workflow/status/asavt7/nixchat_backend/build)
-![Docker build](https://img.shields.io/docker/automated/asavt93/nixedu-backend)
+![Docker build](https://img.shields.io/docker/automated/asavt93/nixchat_backend)
 ![Go Report](https://goreportcard.com/badge/github.com/asavt7/nixchat_backend)
 ![Repository Top Language](https://img.shields.io/github/languages/top/asavt7/nixchat_backend)
 ![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/asavt7/nixchat_backend/badges/quality-score.png?b=main)
