@@ -5,6 +5,7 @@ include $(ENV_FILE)
 export
 
 MAIN_APP_FILE=./cmd/chat/main.go
+MAIN_APP_DIR:= $(shell dirname $(MAIN_APP_FILE))
 PROJECT_NAME=nixchat_backend
 
 ## ----------------------------------------------------------------------
@@ -31,9 +32,7 @@ MOCKS_DESTINATION=mocks
 .PHONY: mocks
 mocks: ## Generate mocks
 	@echo "Generating mocks..."
-	@rm -rf $(MOCKS_DESTINATION)
-	@for file in $(shell find ./pkg -name "*.go" | xargs echo); do mockgen -source=$$file -destination=$(MOCKS_DESTINATION)/$$file; done
-
+	go generate ./...
 
 .PHONY: test
 test: mocks ## Run golang tests
@@ -50,7 +49,7 @@ migrate-down:	## rollback db migrations
 
 .PHONY: linter
 linter:	## Run linter for *.go files
-	revive -config .linter.config.toml  -exclude ./vendor/... -formatter unix ./...
+	revive -config .linter.toml  -exclude ./vendor/... -formatter unix ./...
 
 
 .PHONY: docker-compose-up
@@ -70,7 +69,7 @@ docker-compose-dev-down:	## Stop local dev environment
 
 .PHONY: swagger
 swagger:	## Generate swagger api specs
-	swag init  --dir ./cmd,./pkg --parseInternal true
+	swag init --output ./api --dir ${MAIN_APP_DIR},./internal --parseInternal true
 
 
 .PHONY: help

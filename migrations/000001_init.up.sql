@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS nix.users
     email         varchar(255) NOT NULL unique
         CONSTRAINT proper_email CHECK (email ~* '^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+[.][A-Za-z]+$'),
     password_hash varchar(255),
-    avatar_url    varchar
+    avatar_url    varchar NOT NULL DEFAULT ''
 );
 
 
