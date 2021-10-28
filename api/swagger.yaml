@@ -1,0 +1,114 @@
+basePath: /
+definitions:
+  handlers.Message:
+    properties:
+      message:
+        type: string
+    type: object
+  handlers.signUpUserInput:
+    properties:
+      avatar_url:
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - email
+    - password
+    - username
+    type: object
+  model.User:
+    properties:
+      avatar_url:
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      username:
+        type: string
+    required:
+    - email
+    - username
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: This is a backend for project https://github.com/users/asavt7/projects/2
+  title: nixchat_backed
+  version: "1.0"
+paths:
+  /health/liveness:
+    get:
+      consumes:
+      - '*/*'
+      description: indicates that app is alive or dead
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: livenessProbe
+      tags:
+      - health
+  /health/readiness:
+    get:
+      consumes:
+      - '*/*'
+      description: indicates that app is ready to serve traffic
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: readinessProbe
+      tags:
+      - health
+  /sign-up:
+    post:
+      consumes:
+      - application/json
+      description: register new user
+      operationId: signUp
+      parameters:
+      - description: a body
+        in: body
+        name: signUpUserInput
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.signUpUserInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.Message'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.Message'
+      summary: signUp
+      tags:
+      - auth
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
