@@ -36,7 +36,11 @@ mocks: ## Generate mocks
 
 .PHONY: test
 test: mocks ## Run golang tests
-	go test -race  -coverprofile=coverage.out -cover `go list ./... | grep -v mocks `
+	go test --short -race  -coverprofile=coverage.out -cover `go list ./... | grep -v mocks `
+
+.PHONY: test.integration
+test.integration: ## Run golang integration tests with dockerized environment
+	go test -v ./tests
 
 
 .PHONY: migrate-up

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/asavt7/nixchat_backend/internal/config"
 	"github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq" // import postgres driver
 )
 
 // NewPostgreDb create  *sqlx.DB instance and ping connection. If failed - fail app
