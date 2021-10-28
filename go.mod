@@ -6,7 +6,7 @@ require (
 	contrib.go.opencensus.io/exporter/stackdriver v0.6.0 // indirect
 	git.apache.org/thrift.git v0.0.0-20180924222215-a9235805469b // indirect
 	github.com/Microsoft/go-winio v0.5.1 // indirect
-	github.com/brianvoe/gofakeit/v6 v6.9.0 // indirect
+	github.com/brianvoe/gofakeit/v6 v6.9.0
 	github.com/cenkalti/backoff v2.0.0+incompatible // indirect
 	github.com/cockroachdb/cockroach-go v0.0.0-20181001143604-e0a95dfd547c // indirect
 	github.com/containerd/continuity v0.2.1 // indirect
@@ -16,7 +16,7 @@ require (
 	github.com/go-errors/errors v1.4.1 // indirect
 	github.com/go-ini/ini v1.39.0 // indirect
 	github.com/go-playground/validator/v10 v10.9.0
-	github.com/golang-migrate/migrate/v4 v4.15.1 // indirect
+	github.com/golang-migrate/migrate/v4 v4.15.1
 	github.com/golang/lint v0.0.0-20180702182130-06c8688daad7 // indirect
 	github.com/golang/mock v1.6.0
 	github.com/google/go-github v17.0.0+incompatible // indirect
@@ -36,7 +36,7 @@ require (
 	github.com/openzipkin/zipkin-go v0.1.1 // indirect
 	github.com/ory-am/common v0.4.0 // indirect
 	github.com/ory/dockertest v2.2.3+incompatible // indirect
-	github.com/ory/dockertest/v3 v3.8.0 // indirect
+	github.com/ory/dockertest/v3 v3.8.0
 	github.com/pborman/uuid v1.2.1 // indirect
 	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/viper v1.9.0
