@@ -20,7 +20,9 @@ type (
 	AuthConfig struct {
 		AccessTokenTTL  time.Duration `mapstructure:"accessTokenTTL"`
 		RefreshTokenTTL time.Duration `mapstructure:"refreshTokenTTL"`
-		SigningKey      string        `mapstructure:"jwtSigningKey"`
+		AccessSecret    string        `mapstructure:"accessSecret"`
+		RefreshSecret   string        `mapstructure:"refreshSecret"`
+		AutoLogoffTime  time.Duration `mapstructure:"autoLogoffTime"`
 	}
 	HTTPConfig struct {
 		Host               string        `mapstructure:"host"`
@@ -70,10 +72,13 @@ func Init(pathToConfig string) (*Config, error) {
 }
 
 func bindingEnvs() error {
-	err := viper.BindEnv("auth.jwtSigningKey", "AUTH_JWR_SIGHING_KEY", "AUTH_JWRSIGHINGKEY")
-	if err != nil {
+	if err := viper.BindEnv("auth.accessSecret", "AUTH_ACCESS_SECRET", "AUTH_ACCESSSECRET"); err != nil {
 		return err
 	}
+	if err := viper.BindEnv("auth.refreshSecret", "AUTH_REFRESH_SECRET", "AUTH_REFRESHSECRET"); err != nil {
+		return err
+	}
+	// no errors
 	return nil
 }
 
@@ -85,27 +90,4 @@ func unmarshalConfigs() (*Config, error) {
 		return nil, err
 	}
 	return &cfg, err
-	/*
-		err := viper.UnmarshalKey("pg", &cfg.Postgres)
-		if err != nil {
-			return &cfg, err
-		}
-		err = viper.UnmarshalKey("logger", &cfg.Logger)
-		if err != nil {
-			return &cfg, err
-		}
-		err = viper.UnmarshalKey("http", &cfg.HTTP)
-		if err != nil {
-			return &cfg, err
-		}
-		err = viper.UnmarshalKey("auth", &cfg.Auth)
-		if err != nil {
-			return &cfg, err
-		}
-		err = viper.UnmarshalKey("redis", &cfg.Redis)
-		if err != nil {
-			return &cfg, err
-		}
-
-		return &cfg, nil */
 }

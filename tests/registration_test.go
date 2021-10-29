@@ -1,22 +1,71 @@
 package tests
 
 import (
+	"encoding/json"
 	"fmt"
+	"github.com/asavt7/nixchat_backend/internal/model"
 	"github.com/brianvoe/gofakeit/v6"
 	"github.com/kinbiko/jsonassert"
 	"github.com/labstack/echo/v4"
+	log "github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 	"io"
 	"net/http"
 	"strings"
+	"sync"
 	"testing"
+	"time"
 )
 
 var (
 	username = "Bret"
 	email    = "Sincere@april.biz"
 	password = "password"
+
+	testUserID = "CHANGE_ME"
 )
+
+const (
+	testUsername = "testUsername"
+	testEmail    = "test@gmail.com"
+	testPassword = "test@gmail.com"
+)
+
+func (m *MainTestSuite) registerUser() {
+	var once sync.Once
+	once.Do(func() {
+		baseURL := fmt.Sprintf("http://%s:%s", m.cfg.HTTP.Host, m.cfg.HTTP.Port)
+		signUpURL := baseURL + "/sign-up"
+		client := http.Client{}
+
+		for i := 0; i < 10; i++ {
+			log.Info("Trying register testUser")
+			time.Sleep(100 * time.Millisecond)
+			req, _ := http.NewRequest(echo.POST, signUpURL, strings.NewReader(fmt.Sprintf(`{"username":"%s","email":"%s","password":"%s"}`, testUsername, testEmail, testPassword)))
+			req.Header.Set("Content-Type", "application/json")
+			response, err := client.Do(req)
+			if err != nil || response.StatusCode != 201 {
+				log.Warn(err)
+			}
+			respBody, err := io.ReadAll(response.Body)
+			if err != nil {
+				log.Warn(err)
+				continue
+			}
+
+			var createdTestUser model.User
+			if err := json.Unmarshal(respBody, &createdTestUser); err != nil {
+				log.Warn(err)
+				continue
+			}
+			testUserID = createdTestUser.ID.String()
+
+			return
+		}
+		m.FailNow("Cannot register test user!")
+	})
+
+}
 
 func (m *MainTestSuite) TestSignUp() {
 	baseURL := fmt.Sprintf("http://%s:%s", m.cfg.HTTP.Host, m.cfg.HTTP.Port)

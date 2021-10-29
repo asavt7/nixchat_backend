@@ -9,6 +9,7 @@ import (
 
 	model "github.com/asavt7/nixchat_backend/internal/model"
 	gomock "github.com/golang/mock/gomock"
+	uuid "github.com/google/uuid"
 )
 
 // MockUserRepo is a mock of UserRepo interface.
@@ -62,4 +63,64 @@ func (m *MockUserRepo) FindByUsernameOrEmail(username, email string) ([]model.Us
 func (mr *MockUserRepoMockRecorder) FindByUsernameOrEmail(username, email interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByUsernameOrEmail", reflect.TypeOf((*MockUserRepo)(nil).FindByUsernameOrEmail), username, email)
+}
+
+// GetAll mocks base method.
+func (m *MockUserRepo) GetAll(pagedQuery model.PagedQuery) ([]model.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAll", pagedQuery)
+	ret0, _ := ret[0].([]model.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAll indicates an expected call of GetAll.
+func (mr *MockUserRepoMockRecorder) GetAll(pagedQuery interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAll", reflect.TypeOf((*MockUserRepo)(nil).GetAll), pagedQuery)
+}
+
+// GetByID mocks base method.
+func (m *MockUserRepo) GetByID(userID uuid.UUID) (model.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetByID", userID)
+	ret0, _ := ret[0].(model.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetByID indicates an expected call of GetByID.
+func (mr *MockUserRepoMockRecorder) GetByID(userID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByID", reflect.TypeOf((*MockUserRepo)(nil).GetByID), userID)
+}
+
+// GetByUsername mocks base method.
+func (m *MockUserRepo) GetByUsername(username string) (model.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetByUsername", username)
+	ret0, _ := ret[0].(model.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetByUsername indicates an expected call of GetByUsername.
+func (mr *MockUserRepoMockRecorder) GetByUsername(username interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByUsername", reflect.TypeOf((*MockUserRepo)(nil).GetByUsername), username)
+}
+
+// Update mocks base method.
+func (m *MockUserRepo) Update(userID uuid.UUID, input model.UpdateUserInfo) (model.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Update", userID, input)
+	ret0, _ := ret[0].(model.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Update indicates an expected call of Update.
+func (mr *MockUserRepoMockRecorder) Update(userID, input interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockUserRepo)(nil).Update), userID, input)
 }

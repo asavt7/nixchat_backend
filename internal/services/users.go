@@ -5,6 +5,7 @@ import (
 	"github.com/asavt7/nixchat_backend/internal/model"
 	"github.com/asavt7/nixchat_backend/internal/repos"
 	"github.com/asavt7/nixchat_backend/internal/utils"
+	"github.com/google/uuid"
 )
 
 type UserServiceImpl struct {
@@ -13,6 +14,22 @@ type UserServiceImpl struct {
 
 func NewUserServiceImpl(repo repos.UserRepo) *UserServiceImpl {
 	return &UserServiceImpl{repo: repo}
+}
+
+func (u *UserServiceImpl) GetByID(userID uuid.UUID) (model.User, error) {
+	return u.repo.GetByID(userID)
+}
+
+func (u *UserServiceImpl) GetAll(query model.PagedQuery) ([]model.User, error) {
+	return u.repo.GetAll(query)
+}
+
+func (u *UserServiceImpl) Update(userID uuid.UUID, updateInput model.UpdateUserInfo) (model.User, error) {
+	return u.repo.Update(userID, updateInput)
+}
+
+func (u *UserServiceImpl) GetByUsername(username string) (model.User, error) {
+	return u.repo.GetByUsername(username)
 }
 
 func (u *UserServiceImpl) CreateUser(user model.User, password string) (model.User, error) {

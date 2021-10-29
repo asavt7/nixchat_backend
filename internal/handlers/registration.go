@@ -7,8 +7,9 @@ import (
 )
 
 type signUpUserInput struct {
+	Username string `json:"username" binding:"required" validate:"required,min=2,max=255"`
+	Email    string `json:"email" binding:"required" validate:"required,email,max=255"`
 	Password string `json:"password" validate:"required,min=8,max=255"`
-	model.User
 }
 
 // signUp godoc
@@ -34,7 +35,12 @@ func (h *APIHandler) signUp(c echo.Context) error {
 		return responseMessage(http.StatusBadRequest, err.Error(), c)
 	}
 
-	createdUser, err := h.service.UserService.CreateUser(u.User, u.Password)
+	newUser := model.User{
+		Username: u.Username,
+		Email:    u.Email,
+	}
+
+	createdUser, err := h.service.UserService.CreateUser(newUser, u.Password)
 	if err != nil {
 		return responseMessage(http.StatusBadRequest, err.Error(), c)
 	}

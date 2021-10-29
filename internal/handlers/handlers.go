@@ -33,35 +33,38 @@ func (h *APIHandler) InitRoutes(cfg *config.Config) http.Handler {
 		Format: "method=${method}, uri=${uri}, status=${status}\n",
 	}))
 	h.mainRouter.Use(middleware.Recover())
+	h.mainRouter.Pre(middleware.RemoveTrailingSlash())
 
 	/*
 		mainRouter.GET("/oauth/google/login", h.handleGoogleLogin)
 		mainRouter.GET("/oauth/google/callback", h.handleGoogleCallback)
 	*/
+
 	h.mainRouter.GET("/swagger/*", echoSwagger.WrapHandler)
 	specs.SwaggerInfo.Host = fmt.Sprintf("%s:%s", cfg.HTTP.Host, cfg.HTTP.Port)
 
-	/*
-		mainRouter.POST("/sign-in", h.signIn)
-	*/
+	h.mainRouter.POST("/sign-in", h.signIn)
 	h.mainRouter.POST("/sign-up", h.signUp)
 
 	h.mainRouter.GET("/health/readiness", h.readinessProbe)
 	h.mainRouter.GET("/health/liveness", h.livenessProbe)
 
+	API := h.mainRouter.Group("/api/v1")
+	API.Use(h.parseAccessToken(), h.tokenAutoRefresherMiddleware)
+
+	usersAPI := API.Group("/users")
+	usersAPI.GET("", h.getUsers)
+	usersAPI.GET("/:userId", h.getUserInfo)
+	usersAPI.PUT("/:userId", h.updateUser)
+
 	/*
-		API := mainRouter.Group(apiPath)
-
-		API.Use(parseAccessToken(), h.tokenRefresherMiddleware)
-
-		usersAPI := API.Group("/users/:userId")
 
 		usersAPI.GET("/posts", h.getUserPosts)
 		usersAPI.POST("/posts", h.createPost)
 
 		usersAPI.GET("/posts/:postId", h.getUserPostByID)
 		usersAPI.DELETE("/posts/:postId", h.deletePost)
-		usersAPI.PUT("/posts/:postId", h.updatePost)
+		usersAPI.PUT("/posts/:postId", h.updateUser)
 
 		usersAPI.GET("/posts/:postId/comments", h.getCommentsByPostID)
 		usersAPI.POST("/posts/:postId/comments", h.createComment)

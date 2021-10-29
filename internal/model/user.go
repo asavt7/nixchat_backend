@@ -12,3 +12,7 @@ type User struct {
 
 	AvatarURL string `json:"avatar_url" db:"avatar_url"`
 }
+
+type UpdateUserInfo struct {
+	AvatarURL *string `json:"avatar_url" db:"avatar_url"`
+}

@@ -5,13 +5,26 @@ definitions:
       message:
         type: string
     type: object
+  handlers.signInResponse:
+    properties:
+      access-token:
+        type: string
+      refresh-token:
+        type: string
+    type: object
+  handlers.signInUserInput:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
   handlers.signUpUserInput:
     properties:
-      avatar_url:
-        type: string
       email:
-        type: string
-      id:
         type: string
       password:
         type: string
@@ -21,6 +34,11 @@ definitions:
     - email
     - password
     - username
+    type: object
+  model.UpdateUserInfo:
+    properties:
+      avatar_url:
+        type: string
     type: object
   model.User:
     properties:
@@ -43,6 +61,131 @@ info:
   title: nixchat_backed
   version: "1.0"
 paths:
+  /api/v1/users:
+    get:
+      consumes:
+      - application/json
+      description: getUsers
+      operationId: getUsers
+      parameters:
+      - description: size
+        in: query
+        maximum: 1000
+        minimum: 0
+        name: size
+        type: integer
+      - description: offset
+        in: query
+        minimum: 0
+        name: offset
+        type: integer
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.User'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.Message'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.Message'
+      security:
+      - ApiKeyAuth: []
+      summary: getUsers
+      tags:
+      - users
+  /api/v1/users/{userId}:
+    get:
+      consumes:
+      - application/json
+      description: getUserInfo
+      operationId: getUserInfo
+      parameters:
+      - description: userId
+        in: path
+        name: userId
+        required: true
+        type: integer
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.User'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.Message'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.Message'
+      security:
+      - ApiKeyAuth: []
+      summary: getUserInfo
+      tags:
+      - users
+  /api/v1/users/{userId}/:
+    put:
+      consumes:
+      - application/json
+      description: updateUser
+      operationId: updateUser
+      parameters:
+      - description: userId
+        in: path
+        name: userId
+        required: true
+        type: string
+      - description: update input
+        in: body
+        name: post
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdateUserInfo'
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.User'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.Message'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.Message'
+      security:
+      - ApiKeyAuth: []
+      summary: updateUser
+      tags:
+      - users
   /health/liveness:
     get:
       consumes:
@@ -75,6 +218,37 @@ paths:
       summary: readinessProbe
       tags:
       - health
+  /sign-in:
+    post:
+      consumes:
+      - application/json
+      description: signIn and get access and refresh tokens
+      operationId: signIn
+      parameters:
+      - description: body
+        in: body
+        name: signInUserInput
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.signInUserInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.signInResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.Message'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.Message'
+      summary: signIn
+      tags:
+      - auth
   /sign-up:
     post:
       consumes:

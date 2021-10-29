@@ -29,10 +29,13 @@ func (a *ChatApp) Run() {
 	if err != nil {
 		log.Fatal("ERROR init postgres db", err)
 	}
+	redisClient := repos.InitRedisClient(repos.InitRedisOpts(&a.cfg.Redis))
 
-	repositorories := repos.NewRepositoriesPg(pgdb)
+	repositories := repos.NewRepositoriesPg(pgdb)
 
-	serves := services.NewServices(repositorories)
+	tokenKeeper := repos.NewRedisTokenStorage(redisClient, &a.cfg.Auth)
+
+	serves := services.NewServices(a.cfg, repositories, tokenKeeper)
 
 	handler := handlers.NewAPIHandler(serves)
 

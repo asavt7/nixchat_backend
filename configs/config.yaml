@@ -8,6 +8,7 @@ http:
 auth:
   refreshTokenTTL: 12h
   accessTokenTTL: 2h
+  autoLogoffTime: 1h
 redis:
   host: "localhost"
   port: 6379
