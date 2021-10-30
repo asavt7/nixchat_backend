@@ -8,6 +8,9 @@
 *.test
 *.out
 
+.env
+.env.*
+
 bin
 vendor
 coverage.out
