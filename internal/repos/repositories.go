@@ -18,4 +18,5 @@ type UserRepo interface {
 
 type Repositories struct {
 	UserRepo
+	ChatRepo
 }

@@ -216,7 +216,7 @@ var doc = `{
         },
         "/health/liveness": {
             "get": {
-                "description": "indicates that app is alive or dead",
+                "description": "indicates that apps is alive or dead",
                 "consumes": [
                     "*/*"
                 ],
@@ -240,7 +240,7 @@ var doc = `{
         },
         "/health/readiness": {
             "get": {
-                "description": "indicates that app is ready to serve traffic",
+                "description": "indicates that apps is ready to serve traffic",
                 "consumes": [
                     "*/*"
                 ],

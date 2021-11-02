@@ -24,7 +24,7 @@ func NewAPIServer(cfg *config.Config, handler http.Handler) *APIServer {
 	return s
 }
 
-// Run method run server or fail app
+// Run method run server or fail apps
 func (s *APIServer) Run() error {
 	return s.httpServer.ListenAndServe()
 }

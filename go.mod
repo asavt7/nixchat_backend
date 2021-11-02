@@ -25,6 +25,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/googleapis/gax-go v2.0.0+incompatible // indirect
 	github.com/gorilla/context v1.1.1 // indirect
+	github.com/gorilla/websocket v1.4.2
 	github.com/gotestyourself/gotestyourself v1.3.0 // indirect
 	github.com/jackc/fake v0.0.0-20150926172116-812a484cc733 // indirect
 	github.com/jackc/pgx v3.2.0+incompatible // indirect

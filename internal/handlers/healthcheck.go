@@ -7,7 +7,7 @@ import (
 
 // readinessProbe
 // @Summary readinessProbe
-// @Description indicates that app is ready to serve traffic
+// @Description indicates that apps is ready to serve traffic
 // @Tags health
 // @Accept */*
 // @Produce json
@@ -20,7 +20,7 @@ func (h *APIHandler) readinessProbe(c echo.Context) error {
 
 // livenessProbe
 // @Summary livenessProbe
-// @Description indicates that app is alive or dead
+// @Description indicates that apps is alive or dead
 // @Tags health
 // @Accept */*
 // @Produce json

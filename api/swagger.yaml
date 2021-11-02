@@ -190,7 +190,7 @@ paths:
     get:
       consumes:
       - '*/*'
-      description: indicates that app is alive or dead
+      description: indicates that apps is alive or dead
       produces:
       - application/json
       responses:
@@ -206,7 +206,7 @@ paths:
     get:
       consumes:
       - '*/*'
-      description: indicates that app is ready to serve traffic
+      description: indicates that apps is ready to serve traffic
       produces:
       - application/json
       responses:

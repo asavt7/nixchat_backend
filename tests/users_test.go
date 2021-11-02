@@ -52,9 +52,9 @@ func (m *MainTestSuite) TestUsers_UpdateUser() {
 	userResourceURL := baseURL + "/api/v1/users/" + testUserID
 
 	m.T().Run("ok", func(t *testing.T) {
-		avatarUrl := "http://new_url"
+		avatarURL := "http://new_url"
 
-		req, _ := http.NewRequest(echo.PUT, userResourceURL, strings.NewReader(`{"avatar_url":"`+avatarUrl+`"}`))
+		req, _ := http.NewRequest(echo.PUT, userResourceURL, strings.NewReader(`{"avatar_url":"`+avatarURL+`"}`))
 		req.Header.Set("Content-Type", "application/json")
 		req.Header.Set("Authorization", "Bearer "+m.credentials.accessToken)
 		response, err := client.Do(req)
@@ -67,7 +67,7 @@ func (m *MainTestSuite) TestUsers_UpdateUser() {
 		}
 
 		assert.Equal(t, http.StatusOK, response.StatusCode)
-		jsonassert.New(t).Assertf(string(body), `{"username":"`+testUsername+`","avatar_url":"`+avatarUrl+`","email":"`+testEmail+`","id":"`+testUserID+`"}`)
+		jsonassert.New(t).Assertf(string(body), `{"username":"`+testUsername+`","avatar_url":"`+avatarURL+`","email":"`+testEmail+`","id":"`+testUserID+`"}`)
 	})
 
 }
