@@ -1,10 +1,12 @@
-package app
+package chatback
 
 import (
 	"context"
+	"github.com/asavt7/nixchat_backend/internal/chatbackend"
 	"github.com/asavt7/nixchat_backend/internal/config"
 	"github.com/asavt7/nixchat_backend/internal/db"
 	"github.com/asavt7/nixchat_backend/internal/handlers"
+	"github.com/asavt7/nixchat_backend/internal/handlers/chathub"
 	"github.com/asavt7/nixchat_backend/internal/repos"
 	"github.com/asavt7/nixchat_backend/internal/server"
 	"github.com/asavt7/nixchat_backend/internal/services"
@@ -37,7 +39,16 @@ func (a *ChatApp) Run() {
 
 	serves := services.NewServices(a.cfg, repositories, tokenKeeper)
 
-	handler := handlers.NewAPIHandler(serves)
+	hub := chathub.NewHub(redisClient)
+	err = hub.Run()
+	if err != nil {
+		log.Fatalf("cannot run hub %s", err)
+	}
+
+	backReader := chatbackend.NewChatRequestsProcessor(redisClient, *repos.NewRepositoriesPg(pgdb))
+	backReader.Run()
+
+	handler := handlers.NewAPIHandler(serves, hub)
 
 	apiServer := server.NewAPIServer(a.cfg, handler.InitRoutes(a.cfg))
 

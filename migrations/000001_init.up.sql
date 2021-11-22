@@ -1,6 +1,6 @@
 CREATE SCHEMA IF NOT EXISTS nix;
 
-CREATE TYPE nix.user_to_chat_relations AS ENUM ('userBlockedByChat','chatBlockedByUser', 'joined', 'visited', 'owner');
+CREATE TYPE nix.user_to_chat_relations AS ENUM ('userBlockedByChat','chatBlockedByUser', 'joined', 'visited', 'owner','userToUser');
 CREATE TYPE nix.chat_types AS ENUM ('private','userToUser','public');
 
 CREATE TYPE nix.user_relations_types AS ENUM ('friend', 'blocked');
@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS nix.users
     email         varchar(255) NOT NULL unique
         CONSTRAINT proper_email CHECK (email ~* '^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+[.][A-Za-z]+$'),
     password_hash varchar(255),
-    avatar_url    varchar NOT NULL DEFAULT ''
+    avatar_url    varchar      NOT NULL                    DEFAULT ''
 );
 
 
@@ -31,11 +31,11 @@ CREATE TABLE IF NOT EXISTS nix.chats
 
 CREATE TABLE IF NOT EXISTS nix.messages
 (
-    id        uuid          NOT NULL unique PRIMARY KEY DEFAULT gen_random_uuid(),
-    userid    uuid          NOT NULL,
-    chatid    uuid          NOT NULL,
-    text      varchar(5000) NOT NULL,
-    timestamp timestamp     NOT NULL,
+    id        uuid                     NOT NULL unique PRIMARY KEY DEFAULT gen_random_uuid(),
+    userid    uuid                     NOT NULL,
+    chatid    uuid                     NOT NULL,
+    text      varchar(5000)            NOT NULL,
+    timestamp timestamp with time zone NOT NULL,
     FOREIGN KEY (userid) REFERENCES nix.users (id) ON DELETE NO ACTION,
     FOREIGN KEY (chatid) REFERENCES nix.chats (id) ON DELETE NO ACTION
 );

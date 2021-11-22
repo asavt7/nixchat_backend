@@ -4,6 +4,7 @@ import (
 	"fmt"
 	specs "github.com/asavt7/nixchat_backend/api"
 	"github.com/asavt7/nixchat_backend/internal/config"
+	"github.com/asavt7/nixchat_backend/internal/handlers/chathub"
 	"github.com/asavt7/nixchat_backend/internal/services"
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
@@ -17,14 +18,16 @@ type APIHandler struct {
 	mainRouter *echo.Echo
 	service    *services.Services
 	validator  *validator.Validate
+	hub        chathub.ClientConnectionsHub
 }
 
 // NewAPIHandler constructs APIHandler
-func NewAPIHandler(service *services.Services) *APIHandler {
+func NewAPIHandler(service *services.Services, hub chathub.ClientConnectionsHub) *APIHandler {
 	return &APIHandler{
 		service:    service,
 		validator:  validator.New(),
 		mainRouter: echo.New(),
+		hub:        hub,
 	}
 }
 
@@ -51,6 +54,8 @@ func (h *APIHandler) InitRoutes(cfg *config.Config) http.Handler {
 
 	API := h.mainRouter.Group("/api/v1")
 	API.Use(h.parseAccessToken(), h.tokenAutoRefresherMiddleware)
+
+	API.GET("/ws", h.websocketHandler)
 
 	usersAPI := API.Group("/users")
 	usersAPI.GET("", h.getUsers)

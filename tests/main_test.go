@@ -2,7 +2,7 @@ package tests
 
 import (
 	"fmt"
-	"github.com/asavt7/nixchat_backend/internal/app"
+	"github.com/asavt7/nixchat_backend/internal/apps/chatback"
 	"github.com/asavt7/nixchat_backend/internal/config"
 	"github.com/asavt7/nixchat_backend/internal/repos"
 	"github.com/go-redis/redis/v8"
@@ -41,7 +41,7 @@ type MainTestSuite struct {
 	pgDB        *sqlx.DB
 	redisClient *redis.Client
 
-	chatApp *app.ChatApp
+	chatApp *chatback.ChatApp
 
 	credentials authCredentials
 }
@@ -71,7 +71,7 @@ func (m *MainTestSuite) SetupSuite() {
 
 	m.initApp()
 
-	// todo https://github.com/asavt7/nixchat_backend/issues/11  wait while app initialize -- use readiness probe
+	// todo https://github.com/asavt7/nixchat_backend/issues/11  wait while apps initialize -- use readiness probe
 	time.Sleep(400 * time.Millisecond)
 
 	m.registerUser()
@@ -234,6 +234,6 @@ func getContainerHost(resource *dockertest.Resource) string {
 }
 
 func (m *MainTestSuite) initApp() {
-	chatApp := app.NewChatApp(m.cfg)
+	chatApp := chatback.NewChatApp(m.cfg)
 	go chatApp.Run()
 }

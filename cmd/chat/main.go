@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/asavt7/nixchat_backend/internal/app"
+	"github.com/asavt7/nixchat_backend/internal/apps/chatback"
 	"github.com/asavt7/nixchat_backend/internal/config"
 	log "github.com/sirupsen/logrus"
 )
@@ -23,6 +23,6 @@ func main() {
 	if err != nil {
 		log.Fatal("ERROR init configs", err)
 	}
-	chatApp := app.NewChatApp(cfg)
+	chatApp := chatback.NewChatApp(cfg)
 	chatApp.Run()
 }

@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"errors"
+	mock_chathub "github.com/asavt7/nixchat_backend/internal/handlers/chathub/mocks"
 	"github.com/asavt7/nixchat_backend/internal/model"
 	"github.com/asavt7/nixchat_backend/internal/services"
 	mock_services "github.com/asavt7/nixchat_backend/internal/services/mocks"
@@ -33,7 +34,8 @@ func TestAPIHandler_signUp(t *testing.T) {
 	defer controller.Finish()
 
 	mockSrv := mock_services.NewMockUserService(controller)
-	handler := NewAPIHandler(&services.Services{UserService: mockSrv})
+
+	handler := NewAPIHandler(&services.Services{UserService: mockSrv}, mock_chathub.NewMockClientConnectionsHub(controller))
 	e := echo.New()
 
 	table := []struct {
